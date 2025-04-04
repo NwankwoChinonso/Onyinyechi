@@ -1,0 +1,39 @@
+let sessionStartTime = Date.now(); // Capture the time when the user enters the page
+
+// When the user is leaving the page, capture the duration
+window.onbeforeunload = function() {
+    let sessionEndTime = Date.now();
+    let timeSpent = sessionEndTime - sessionStartTime; // Time spent on page in milliseconds
+    
+    // Send the data to your backend (for example, via AJAX)
+    fetch('/track-time', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ timeSpent: timeSpent }),
+    });
+};
+
+// Track how often a user visits (using local storage or cookies)
+if (!localStorage.getItem('visited')) {
+    // First time visit
+    localStorage.setItem('visited', 'true');
+    // Send data about the visit to the server if needed
+    fetch('/track-first-visit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ visitType: 'first-time' }),
+    });
+} else {
+    // User has visited before
+    fetch('/track-return-visit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ visitType: 'return' }),
+    });
+}

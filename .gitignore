@@ -1,0 +1,8 @@
+#Ignore the following files
+
+__init__.py
+admin.py
+settings.py
+db.postgresql
+env
+manage.py
